@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:DevConsole/src/Context/Devices.dart';
 import 'package:DevConsole/src/Context/UserDetails.dart';
+import 'package:DevConsole/src/Context/Users.dart';
 import 'package:DevConsole/src/Database/Databasehelper.dart';
 import 'package:DevConsole/src/Helpers/Routehelper.dart';
 import 'package:DevConsole/src/Pages/Login.dart';
@@ -38,6 +39,16 @@ class ApiHelper {
     var response = await http.get(url, headers: {"token": UserDetails.token});
     var body = json.decode(response.body);
     checkSession(body, context);
+    return (body);
+  }
+
+  static Future<dynamic> getUsers( context) async {
+    var url = Api.url + "/getUsers";
+    var response = await http.get(url, headers: {"token": UserDetails.token});
+    var body = json.decode(response.body);
+    checkSession(body, context);
+    Users.users = body["users"];
+    print(Users.users);
     return (body);
   }
 

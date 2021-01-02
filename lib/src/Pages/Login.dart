@@ -43,6 +43,7 @@ class _LoginState extends State<Login> {
     UserDetails.admin = admin;
     UserDetails.token = token;
     await ApiHelper.getDevices(context);
+    await ApiHelper.getUsers(context);
     await StoreRef.main().record("token").add(DataBaseHelper.db, token);
     await StoreRef.main().record("admin").add(DataBaseHelper.db, admin);
 

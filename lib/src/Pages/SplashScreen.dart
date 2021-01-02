@@ -47,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     UserDetails.admin =
         await StoreRef.main().record("admin").get(DataBaseHelper.db);
     await ApiHelper.getDevices(context);
+    await ApiHelper.getUsers(context);
     RouteHelper.navigateReplace(context, Home());
   }
 

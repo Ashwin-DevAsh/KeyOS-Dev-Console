@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class WidgetHelper {
   static Widget getAppBar(context) {
@@ -14,6 +15,15 @@ class WidgetHelper {
           ],
         ),
       ],
+    );
+  }
+
+  static Widget getUserTile(email,count,index){
+    var colors = [Colors.red,Colors.blue,Colors.green,Colors.orange,Colors.pink,Colors.purple];
+    return ListTile(
+      leading: CircleAvatar(backgroundColor: colors[index%colors.length],child: Text(email[0],style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),),
+      title: Text(email,style: TextStyle(),),
+      subtitle: Text( "No of Devices ${count}"),
     );
   }
 
