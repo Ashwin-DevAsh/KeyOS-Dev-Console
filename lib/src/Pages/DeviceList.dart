@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:DevConsole/src/Context/Devices.dart';
 import 'package:DevConsole/src/Helpers/Routehelper.dart';
 import 'package:DevConsole/src/Helpers/WidgetHelper.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,35 @@ class DeviceList extends StatefulWidget {
 }
 
 class _DeviceListState extends State<DeviceList> {
+  var searchBarContoller = TextEditingController();
+  var devices = [];
+
+  @override
+  void initState() {
+    print(Devices.activeDevices);
+
+    devices.addAll(widget.devices);
+    super.initState();
+  }
+
+  void search() {
+    this.devices = [];
+    widget.devices.forEach((element) {
+      var isValid = element["brand"]
+              .toString()
+              .toLowerCase()
+              .contains(this.searchBarContoller.text.toLowerCase()) ||
+          element["model"]
+              .toString()
+              .toLowerCase()
+              .contains(this.searchBarContoller.text.toLowerCase());
+      if (isValid) {
+        print(element);
+        devices.add(element);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +56,13 @@ class _DeviceListState extends State<DeviceList> {
         child: SingleChildScrollView(
           child: Column(children: [
             WidgetHelper.getAppBar(context),
-            WidgetHelper.getHeader("List of","${widget.title} devices",context),
-            getSearchBar(),
+            WidgetHelper.getHeader(
+                "List of", "${widget.title} devices", context),
+            WidgetHelper.getSearchBar(
+                searchBarContoller,
+                () => setState(() {
+                      search();
+                    })),
             SizedBox(height: 50),
             getTileContainer()
           ]),
@@ -45,8 +80,8 @@ class _DeviceListState extends State<DeviceList> {
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         crossAxisCount: 1,
-        children: List.generate(
-            widget.devices.length, (index) => getCard(widget.devices[index])),
+        children:
+            List.generate(devices.length, (index) => getCard(devices[index])),
       ),
     );
   }
@@ -151,55 +186,4 @@ class _DeviceListState extends State<DeviceList> {
       ),
     );
   }
-
-  Widget getSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 18, right: 18, top: 40),
-      child: Material(
-        borderOnForeground: false,
-        color: Color(0xffefefef),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(27.5),
-          topLeft: Radius.circular(27.5),
-          bottomRight: Radius.circular(27.5),
-        ),
-        child: Row(
-          children: [
-            Flexible(
-              child: Container(
-                height: 55,
-                child: TextField(
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 40, left: 20),
-                      hintText: "Serach Devices",
-                      border: OutlineInputBorder(borderSide: BorderSide.none)),
-                ),
-              ),
-            ),
-            Material(
-                elevation: 5,
-                shadowColor: Colors.black,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(27.5),
-                  bottomRight: Radius.circular(27.5),
-                ),
-                color: Colors.black,
-                child: Container(
-                  height: 55,
-                  width: 54,
-                  child: Center(
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                  ),
-                ))
-          ],
-        ),
-      ),
-    );
-  }
-
-  
 }

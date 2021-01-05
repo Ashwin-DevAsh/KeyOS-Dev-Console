@@ -42,7 +42,7 @@ class ApiHelper {
     return (body);
   }
 
-  static Future<dynamic> getUsers( context) async {
+  static Future<dynamic> getUsers(context) async {
     var url = Api.url + "/getUsers";
     var response = await http.get(url, headers: {"token": UserDetails.token});
     var body = json.decode(response.body);

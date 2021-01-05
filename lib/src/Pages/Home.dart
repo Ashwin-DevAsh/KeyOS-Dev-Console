@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:DevConsole/src/Context/Api.dart';
 import 'package:DevConsole/src/Context/Devices.dart';
 import 'package:DevConsole/src/Context/UserDetails.dart';
 import 'package:DevConsole/src/Context/Users.dart';
 import 'package:DevConsole/src/Helpers/ApiHelper.dart';
 import 'package:DevConsole/src/Helpers/Routehelper.dart';
 import 'package:DevConsole/src/Helpers/WidgetHelper.dart';
+import 'package:DevConsole/src/Pages/EnrolledUsers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,47 +34,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
-      drawer: Drawer(
-
-        child: SingleChildScrollView(
-                  child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Container(
-              height:100
-            ),
-            Divider(thickness: 1,),
-              Container(
-              height:100
-            ),
-
-            Divider(thickness: 1,),
-            
-            Padding(
-              padding: const EdgeInsets.only(left:15.0,top:25,bottom: 15),
-              child: Text("Enrolled",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black.withOpacity(0.6),)),
-            ),
-            ListTile(
-              leading: Icon(MaterialIcons.people),
-              title: Text("View all"),
-              onTap: (){},
-              trailing: Icon(Icons.arrow_forward_ios,size: 12,),
-            ),
-            SizedBox(height: 10,),
-            ...List.generate(Users.users.length>8?8:Users.users.length, (index) => WidgetHelper.getUserTile(Users.users[index]["email"], Users.users[index]["devicescount"],index)),
-            SizedBox(height: 10,),
-
-            Divider(thickness: 1,),
-              Container(
-              height:100
-            ),
-
-
-          ],),
-        ),
-        
-      ),
+      key: scaffoldKey,
+      drawer: getDrawer(),
       backgroundColor: Colors.white,
       body: LayoutBuilder(builder: (context, constraints) {
         return SafeArea(
@@ -95,7 +58,7 @@ class _HomeState extends State<Home> {
                         getGreetings(),
                         SizedBox(height: 40),
                         getTileContainer(),
-                        SizedBox(height: 40),                     
+                        SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -151,8 +114,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-
-
   Widget getTileContainer() {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
@@ -172,7 +133,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
 
   Widget getCard(color, title, deviceList, icon) {
     var width = (MediaQuery.of(context).size.width - 40) / 2;
@@ -253,19 +213,133 @@ class _HomeState extends State<Home> {
               width: 20,
             ),
             GestureDetector(
-              onTap: (){
-                 if (scaffoldKey.currentState.isDrawerOpen)
-           scaffoldKey.currentState.openEndDrawer();
-          else {
-            scaffoldKey.currentState.openDrawer();
-          }
+              onTap: () {
+                if (scaffoldKey.currentState.isDrawerOpen)
+                  scaffoldKey.currentState.openEndDrawer();
+                else {
+                  scaffoldKey.currentState.openDrawer();
+                }
               },
-                          child: Image(
+              child: Image(
                 image: Image.asset("lib/src/Assets/Images/menu.png").image,
                 width: 40,
               ),
             )
           ],
         ));
+  }
+
+  Drawer getDrawer() {
+    return Drawer(
+      child: SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 20.0, bottom: 20, left: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image(
+                          image: Image.asset(
+                                  "lib/src/Assets/Images/appIcon512.png")
+                              .image,
+                          height: 80,
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            "Connected",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, top: 7.5),
+                          child: Text(
+                            "Server Address ${Api.ipAddress}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black.withOpacity(0.5)),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        onTap: () {},
+                        leading: Icon(MaterialIcons.question_answer),
+                        title: Text("Execute Query"),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () {},
+                        leading: Icon(MaterialIcons.date_range),
+                        title: Text("Data Migration"),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 15.0, top: 25, bottom: 15),
+                  child: Text("Enrolled",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(0.6),
+                      )),
+                ),
+                ListTile(
+                  leading: Icon(MaterialIcons.people),
+                  title: Text("View all"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    RouteHelper.navigate(context, EnrolledUsers());
+                  },
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ...List.generate(
+                    Users.users.length > 8 ? 8 : Users.users.length,
+                    (index) => WidgetHelper.getUserTile(
+                        Users.users[index], index, context)),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

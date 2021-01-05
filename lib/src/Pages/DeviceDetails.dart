@@ -1,6 +1,7 @@
 import 'package:DevConsole/src/Helpers/ApiHelper.dart';
 import 'package:DevConsole/src/Helpers/Routehelper.dart';
 import 'package:DevConsole/src/Helpers/WidgetHelper.dart';
+import 'package:DevConsole/src/Pages/AppList.dart';
 import 'package:DevConsole/src/Pages/CallBlocker.dart';
 import 'package:DevConsole/src/Pages/Webfilter.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,7 +52,6 @@ class _DeviceDetailsState extends State<DeviceDetails> {
           var basicSettings = config["basicSettings"];
           var calls = config["calls"];
           var webFilter = config["webFilter"];
-
 
           print(config);
           return SafeArea(
@@ -124,18 +124,39 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                           subtitle:
                               "Allowed ${config["allowedApps"].length} Apps",
                           icon: MaterialIcons.apps,
+                          onClick: () {
+                            RouteHelper.navigate(
+                                context,
+                                AppList(
+                                  apps: config["allowedApps"],title: "Allowes Apps",
+                                ));
+                          },
                           showArrow: true),
                       getBigListTile(
                           title: "Edited Apps",
                           subtitle:
                               "Edited ${config["editedApps"].length} Apps",
                           icon: MaterialIcons.edit,
+                          onClick: () {
+                            RouteHelper.navigate(
+                                context,
+                                AppList(
+                                  apps: config["editedApps"],title: "Edited Apps",
+                                ));
+                          },
                           showArrow: true),
                       getBigListTile(
                           title: "Service",
                           subtitle:
                               "Allowed ${config["allowedServices"].length} Services",
                           icon: MaterialIcons.settings,
+                          onClick: () {
+                            RouteHelper.navigate(
+                                context,
+                                AppList(
+                                  apps: config["allowedServices"],title: "Allowes Services",
+                                ));
+                          },
                           showArrow: true),
                       getBigListTile(
                           onClick: () {
@@ -151,16 +172,24 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                           showArrow: true),
                       Divider(),
                       getBigListTile(
-                        onClick: (){
-                          RouteHelper.navigate(context, CallBlocker(calls: calls,));
-                        },
+                          onClick: () {
+                            RouteHelper.navigate(
+                                context,
+                                CallBlocker(
+                                  calls: calls,
+                                ));
+                          },
                           title: "Call Blocker",
                           icon: MaterialIcons.call,
                           showArrow: true),
                       getBigListTile(
-                          onClick: (){
-                          RouteHelper.navigate(context, WebFilter(webfilter: webFilter,));
-                        },
+                          onClick: () {
+                            RouteHelper.navigate(
+                                context,
+                                WebFilter(
+                                  webfilter: webFilter,
+                                ));
+                          },
                           title: "Web Blocker",
                           icon: MaterialIcons.open_in_browser,
                           showArrow: true),

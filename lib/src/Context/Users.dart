@@ -1,3 +1,3 @@
-class Users{
+class Users {
   static var users = [];
 }
