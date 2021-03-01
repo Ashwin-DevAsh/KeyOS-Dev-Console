@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:DevConsole/src/Context/Api.dart';
 import 'package:DevConsole/src/Context/Devices.dart';
+import 'package:DevConsole/src/Context/PrevCountState.dart';
 import 'package:DevConsole/src/Context/UserDetails.dart';
 import 'package:DevConsole/src/Context/Users.dart';
 import 'package:DevConsole/src/Helpers/ApiHelper.dart';
@@ -25,6 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Future<void> refresh() async {
     await ApiHelper.getDevices(context);
+    await ApiHelper.getUsers(context);
     setState(() {});
     return;
   }
@@ -124,17 +126,17 @@ class _HomeState extends State<Home> {
         crossAxisCount: 2,
         children: [
           getCard(Colors.green, "Active", Devices.activeDevices,
-              Icons.offline_bolt),
+              Icons.offline_bolt,Devices.activeDevices.length-PrevStateCount.activeDevicesCount),
           getCard(Colors.red, "InActive", Devices.inactiveDevices,
-              Icons.power_off_rounded),
+              Icons.power_off_rounded,Devices.inactiveDevices.length-PrevStateCount.inactiveDevicesCount),
           getCard(Colors.purple, "visited", Devices.justInstalled,
-              Icons.download_done_outlined)
+              Icons.download_done_outlined,Devices.justInstalled.length-PrevStateCount.justInstalledCount)
         ],
       ),
     );
   }
 
-  Widget getCard(color, title, deviceList, icon) {
+  Widget getCard(color, title, deviceList, icon,todayState) {
     var width = (MediaQuery.of(context).size.width - 40) / 2;
     try {
       width = (width * (deviceList.length / Devices.allDevices.length));
@@ -180,12 +182,27 @@ class _HomeState extends State<Home> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 10),
-                        Text(
-                          "${deviceList.length} Devices",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black.withOpacity(.5)),
+                        Row(
+                          children: [
+                            Text(
+                              "${deviceList.length} Devices",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black.withOpacity(.5)),
+                            ),
+                            Expanded(child: Center(),),
+
+                            todayState!=0? Text(
+                              todayState>0?"+$todayState":"$todayState",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: todayState>0? Colors.green:Colors.red),
+                            ):Center(),
+                            // Icon(FontAwesome.long_arrow_down,size: 10, color: todayState>0? Colors.green:Colors.red),
+                            SizedBox(width:15)
+                          ],
                         ),
                       ],
                     ),
@@ -279,6 +296,15 @@ class _HomeState extends State<Home> {
                 Container(
                   child: Column(
                     children: [
+                      ListTile(
+                        onTap: () {},
+                        leading: Icon(MaterialCommunityIcons.server,),
+                        title: Text("Server SSH"),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
+                        ),
+                      ),
                       ListTile(
                         onTap: () {},
                         leading: Icon(MaterialIcons.question_answer),

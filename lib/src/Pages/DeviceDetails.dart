@@ -72,16 +72,24 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                   Column(
                     children: [
                       getBigListTile(
+                          title: "Status",
+                          subtitle: widget.device["islaunched"]=="true"?"Active":"inActive",
+                          icon: Icons.insert_chart,),
+                      getBigListTile(
                           title: "Device ID",
                           subtitle: widget.device["deviceid"],
                           icon: Icons.mobile_friendly),
+                      getBigListTile(
+                          title: "wifi Mac",
+                          subtitle: widget.device["wifimac"]==null?"None":widget.device["wifimac"],
+                          icon: Icons.wifi),
                       getBigListTile(
                           title: "Password",
                           subtitle: config["password"].toString(),
                           icon: MaterialIcons.lock_outline),
                       getBigListTile(
                           title: "Email",
-                          subtitle: config["recoveryEmail"].toString(),
+                          subtitle: config["recoveryEmail"].toString()=="" ?"None":config["recoveryEmail"].toString(),
                           icon: MaterialIcons.mail_outline),
                       Divider(),
                       getNormalListTile(

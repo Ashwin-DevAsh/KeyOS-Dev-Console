@@ -122,10 +122,31 @@ class _DeviceListState extends State<DeviceList> {
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              device["brand"],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12.5),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  device["brand"],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 12.5),
+                                ),
+                                 device["isonline"]?   Padding(
+                                      padding: const EdgeInsets.only(bottom:7.5),
+                                      child: Material(
+                                        elevation: 2,
+                                            borderRadius:BorderRadius.circular(5),
+
+                                                                              child: Container(
+                                          height:10,
+                                          width:10,
+                                          decoration:BoxDecoration(
+                                            borderRadius:BorderRadius.circular(5),
+                                            color:Colors.red.withOpacity(0.75)
+                                          )
+                                        ),
+                                      ),
+                                    ):Center()
+                              ],
                             ),
                             SizedBox(height: 7.5),
                             Row(

@@ -31,11 +31,9 @@ class _SplashScreenState extends State<SplashScreen> {
     var token =
         await DataBaseHelper.store.record("token").exists(DataBaseHelper.db);
     if (token) {
-      Future.delayed(Duration(seconds: 1), () {
         openHomePage();
-      });
     } else {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         RouteHelper.navigateReplace(context, Login());
       });
     }
