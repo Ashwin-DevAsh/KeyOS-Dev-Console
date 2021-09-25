@@ -22,11 +22,19 @@ class _DeviceListState extends State<DeviceList> {
   var searchBarContoller = TextEditingController();
   var devices = [];
 
+  var offset = 0;
+  var limit = 20;
+
+  var isPageLoading = false;
+
   @override
   void initState() {
     print(Devices.activeDevices);
-
-    devices.addAll(widget.devices);
+    try{
+    devices.addAll(widget.devices.sublist(offset,offset+limit));
+    }catch(e){
+      devices.addAll(widget.devices);
+    }
     super.initState();
   }
 
@@ -64,11 +72,76 @@ class _DeviceListState extends State<DeviceList> {
                       search();
                     })),
             SizedBox(height: 50),
-            getTileContainer()
+            getTileContainer(),
+            getLoader(),
           ]),
         ),
       ),
     );
+  }
+
+  Widget getLoader(){
+    if(!isPageLoading){
+      return GestureDetector(
+        onTap: ()async {
+           setState(() {
+             isPageLoading=true;
+        
+           });
+         
+            Future.delayed(Duration(seconds: 1),(){
+                var start = offset+limit;
+             setState(() {
+               try{
+                devices.addAll(widget.devices.sublist(start,start+limit));
+                offset=start;
+                isPageLoading=false;
+               }catch(e){
+                 devices = [];
+                 devices.addAll(widget.devices);
+                 isPageLoading=false;
+                offset=widget.devices.length;
+               }
+          
+             });
+           });
+           },
+              child: Padding(
+          padding: const EdgeInsets.only(bottom:40.0,top:20),
+          child: Material(
+              borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(27.5),
+                        bottomRight: Radius.circular(27.5),
+                      ),
+              elevation: 0,
+              child: Container(
+                child: Center(
+                  child: Text("More",style: TextStyle(fontWeight: FontWeight.bold),),
+                ),
+                height: 50,
+                width: 150,
+                      decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black.withOpacity(0.25)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(27.5),
+                  bottomRight: Radius.circular(27.5),
+                ),
+              ),
+              ),
+          ),
+        ),
+      );
+    }else{
+        return Padding(
+          padding: const EdgeInsets.only(bottom:40.0,top:20),
+          child: Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ),
+              ),
+        );
+    }
   }
 
   Widget getTileContainer() {

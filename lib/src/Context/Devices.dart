@@ -9,7 +9,5 @@ class Devices {
     activeDevices = data["active"];
     inactiveDevices = data["inactive"];
     justInstalled = data["justInstalled"];
-
-    
   }
 }
